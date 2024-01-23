@@ -1,0 +1,61 @@
+
+#links#
+https://shockbyte.com/billing/knowledgebase/190/How-to-Add-a-Custom-Map-to-Your-Rust-Server.html
+https://developer.valvesoftware.com/wiki/Rust_Dedicated_Server
+https://developer.valvesoftware.com/wiki/SteamCMD
+https://www.rustafied.com/how-to-host-a-rust-server-in-linux
+
+sudo add-apt-repository multiverse; sudo dpkg --add-architecture i386; sudo apt update
+sudo apt install steamcmd
+
+login anonymous
+app_update 258550
+
+cd /root/.steam/SteamApps/common/rust_dedicated/
+
+nano startrust.sh
+##################################################
+#!/bin/sh
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)
+clear
+while :
+do
+    echo "Starting server..."
+    echo
+
+    ./RustDedicated -batchmode -nographics \
+    -rcon.ip 0.0.0.0 \
+    -rcon.port 28016 \
+    -rcon.password "dasdasdasdasd" \
+    -server.ip 0.0.0.0 \
+    -server.port 28015 \
+    -server.maxplayers 50 \
+    -server.hostname "test" \
+    -server.identity "server1" \
+    -server.level "Procedural Map" \
+    -server.seed 12345 \
+    -server.worldsize 4000 \
+    -server.saveinterval 300 \
+    -server.globalchat true \
+    -server.description "Powered by Oxide" \
+    -server.headerimage "http://i.imgur.com/xNyLhMt.jpg" \
+    -server.url "https://oxidemod.org"
+
+    echo
+    echo "Restarting server..."
+    sleep 10
+done
+#################################################
+
+chmod u+x startrust.sh
+
+move steamclient
+cp /root/.steam/steamcmd/linux64/steamclient.so /root/.steam/sdk64/
+
+download umod : https://umod.org/games/rust/download/develop
+apt install unzip
+cd /root/.steam/SteamApps/common/rust_dedicated/
+
+unzip Oxide.Rust-linux.zip
+
+bash startrust.sh
